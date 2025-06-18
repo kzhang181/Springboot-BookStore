@@ -32,4 +32,31 @@ public class AuthorTests {
         assert book.getAuthor().getFirstName().equals("Bob");
         assert book.getAuthor().getLastName().equals("Smith");
     }
+
+    @Test
+    void testAuthorIDChange(){
+        Author author = new Author();
+        author.setId(1L);
+        author.setFirstName("Charlie");
+        author.setLastName("Brown");
+        assert author.getId().equals(1L);
+        assert author.getFirstName().equals("Charlie");
+        assert author.getLastName().equals("Brown");
+        author.setId(2L);
+        assert author.getId().equals(2L);
+    }
+
+    @Test
+    void testAuthorNameChange() {
+        Author author = new Author();
+        author.setId(1L);
+        author.setFirstName("David");
+        author.setLastName("White");
+        assert author.getFirstName().equals("David");
+        assert author.getLastName().equals("White");
+        author.setFirstName("Daniel");
+        author.setLastName("Black");
+        assert author.getFirstName().equals("Daniel");
+        assert author.getLastName().equals("Black");
+    }
 }
