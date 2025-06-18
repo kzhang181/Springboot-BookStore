@@ -1,0 +1,8 @@
+com\example\demo\model\Book.class
+com\example\demo\BookManagement.class
+com\example\demo\Controller\BookController.class
+com\example\demo\Controller\AuthorController.class
+com\example\demo\repository\BookRepository.class
+com\example\demo\Controller\HomeController.class
+com\example\demo\model\Author.class
+com\example\demo\repository\AuthorRepository.class
