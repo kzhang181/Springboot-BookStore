@@ -66,4 +66,23 @@ class BookTest {
         book.setTitle("Updated Title");
         assert book.getTitle().equals("Updated Title");
     }
+
+    @Test
+    void testBookAuthorChange() {
+        Author author1 = new Author();
+        author1.setId(1L);
+        author1.setFirstName("Charlie");
+        author1.setLastName("Green");
+        Author author2 = new Author();
+        author2.setId(2L);
+        author2.setFirstName("Diana");
+        author2.setLastName("Blue");
+        Book book = new Book();
+        book.setId(1L);
+        book.setTitle("Book with Changing Author");
+        book.setAuthor(author1);
+        assert book.getAuthor().getId().equals(1L);
+        book.setAuthor(author2);
+        assert book.getAuthor().getId().equals(2L);
+    }
 }
