@@ -13,6 +13,14 @@ public class AuthorTests {
     }
 
     @Test
+    void testAuthorConstructorWithParams() {
+        Author author = new Author(10L, "Emily", "Bronte");
+        assert author.getId().equals(10L);
+        assert author.getFirstName().equals("Emily");
+        assert author.getLastName().equals("Bronte");
+    }
+    
+    @Test
     void testAuthorCreation() {
         Author author = new Author();
         author.setFirstName("Alice");

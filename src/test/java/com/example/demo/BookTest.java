@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import com.example.demo.model.Author;
 import com.example.demo.model.Book;
 import org.springframework.boot.test.context.SpringBootTest;
+import java.util.ArrayList;
+import java.util.List;
 
 class BookTest {
     @Test
@@ -22,6 +24,15 @@ class BookTest {
         assert book.getTitle().equals("Test Book");
         assert book.getAuthor().getFirstName().equals("John");
         assert book.getAuthor().getLastName().equals("Doe");
+    }
+
+    @Test
+    void testBookConstructorWithParams() {
+        Author author = new Author(5L, "Mark", "Twain");
+        Book book = new Book(20L, "Tom Sawyer", author);
+        assert book.getId().equals(20L);
+        assert book.getTitle().equals("Tom Sawyer");
+        assert book.getAuthor().equals(author);
     }
 
     @Test
@@ -84,5 +95,24 @@ class BookTest {
         assert book.getAuthor().getId().equals(1L);
         book.setAuthor(author2);
         assert book.getAuthor().getId().equals(2L);
+    }
+
+    @Test
+    void testBookWithoutAuthor() {
+        Book book = new Book();
+        book.setTitle("Orphan Book");
+        assert book.getAuthor() == null;
+    }
+
+    @Test
+    void testAuthorBooksList() {
+        Author author = new Author();
+        Book book1 = new Book();
+        Book book2 = new Book();
+        List<Book> books = new ArrayList<>();
+        books.add(book1);
+        books.add(book2);
+        author.setBooks(books);
+        assert author.getBooks().size() == 2;
     }
 }
