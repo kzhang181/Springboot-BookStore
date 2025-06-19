@@ -12,6 +12,7 @@ public class AuthorTests {
         // This test checks if the Spring application context loads successfully
     }
 
+    // Test for Author creation with default constructor
     @Test
     void testAuthorConstructorWithParams() {
         Author author = new Author(10L, "Emily", "Bronte");
@@ -19,7 +20,8 @@ public class AuthorTests {
         assert author.getFirstName().equals("Emily");
         assert author.getLastName().equals("Bronte");
     }
-    
+
+    // Test for Author creation with parameters
     @Test
     void testAuthorCreation() {
         Author author = new Author();
@@ -29,6 +31,7 @@ public class AuthorTests {
         assert author.getLastName().equals("Johnson");
     }
 
+    // Test for Author and Book relationship (Book.getAuthor() mapping)
     @Test
     void testAuthorAndBookRelationship() {
         Author author = new Author();
@@ -41,6 +44,7 @@ public class AuthorTests {
         assert book.getAuthor().getLastName().equals("Smith");
     }
 
+    // Test for Author ID change
     @Test
     void testAuthorIDChange(){
         Author author = new Author();
@@ -54,6 +58,7 @@ public class AuthorTests {
         assert author.getId().equals(2L);
     }
 
+    // Test for Author name change
     @Test
     void testAuthorNameChange() {
         Author author = new Author();

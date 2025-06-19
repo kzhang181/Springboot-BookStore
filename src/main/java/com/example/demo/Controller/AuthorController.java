@@ -38,4 +38,15 @@ public class AuthorController {
         // This method should delete an author by their ID
         authorRepository.deleteById(id); // In a real application, you would delete the author from the database
     }
+
+    @PutMapping("/authors/{id}")
+    public Author updateAuthor(@PathVariable Long id, @RequestBody Author updatedAuthor) {
+        return authorRepository.findById(id)
+            .map(author -> {
+                author.setFirstName(updatedAuthor.getFirstName());
+                author.setLastName(updatedAuthor.getLastName());
+                return authorRepository.save(author);
+            })
+            .orElseThrow(() -> new RuntimeException("Author not found"));
+    }
 }

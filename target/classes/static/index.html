@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +6,9 @@
     <style>
         body { font-family: Arial, sans-serif; margin: 2em; }
         h2 { margin-top: 2em; }
-        input, button { margin: 0.5em 0; }
+        input, button, select { margin: 0.5em 0; }
         table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 0.5em; }
+        .edit-form { display: none; margin-top: 1em; border: 1px solid #aaa; padding: 1em; background: #f9f9f9; }
     </style>
 </head>
 <body>
@@ -22,10 +22,21 @@
     </form>
     <div id="authorMsg"></div>
 
+    <!-- Edit Author Form -->
+    <div id="editAuthorForm" class="edit-form">
+        <h3>Edit Author</h3>
+        <input type="hidden" id="editAuthorId">
+        <input type="text" id="editAuthorFirstName" placeholder="First Name" required>
+        <input type="text" id="editAuthorLastName" placeholder="Last Name" required>
+        <button onclick="submitEditAuthor()">Save</button>
+        <button onclick="hideEditAuthorForm()">Cancel</button>
+        <div id="editAuthorMsg"></div>
+    </div>
+
     <h2>Authors</h2>
     <table id="authorsTable">
         <thead>
-            <tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Delete</th></tr>
+            <tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Edit</th><th>Delete</th></tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -38,10 +49,21 @@
     </form>
     <div id="bookMsg"></div>
 
+    <!-- Edit Book Form -->
+    <div id="editBookForm" class="edit-form">
+        <h3>Edit Book</h3>
+        <input type="hidden" id="editBookId">
+        <input type="text" id="editBookTitle" placeholder="Book Title" required>
+        <select id="editBookAuthor" required></select>
+        <button onclick="submitEditBook()">Save</button>
+        <button onclick="hideEditBookForm()">Cancel</button>
+        <div id="editBookMsg"></div>
+    </div>
+
     <h2>Books</h2>
     <table id="booksTable">
         <thead>
-            <tr><th>ID</th><th>Title</th><th>Author</th><th>Delete</th></tr>
+            <tr><th>ID</th><th>Title</th><th>Author</th><th>Edit</th><th>Delete</th></tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -49,7 +71,6 @@
 <script>
 const apiBase = "http://localhost:8080";
 
-// Load authors and books on page load
 window.onload = function() {
     loadAuthors();
     loadBooks();
@@ -62,13 +83,24 @@ function loadAuthors() {
             const tbody = document.querySelector("#authorsTable tbody");
             tbody.innerHTML = "";
             authors.forEach(a => {
-                const row = `<tr><td>${a.id}</td><td>${a.firstName || a.first_name}</td><td>${a.lastName || a.last_name}</td><td><button onclick="deleteAuthor(${a.id})">Delete</button></td></tr>`;
+                const row = `<tr>
+                    <td>${a.id}</td>
+                    <td>${a.firstName || a.first_name}</td>
+                    <td>${a.lastName || a.last_name}</td>
+                    <td><button onclick="showEditAuthorForm(${a.id}, '${a.firstName || a.first_name}', '${a.lastName || a.last_name}')">Edit</button></td>
+                    <td><button onclick="deleteAuthor(${a.id})">Delete</button></td>
+                </tr>`;
                 tbody.innerHTML += row;
             });
+            // Fill author selects
             const select = document.getElementById("bookAuthor");
+            const editSelect = document.getElementById("editBookAuthor");
             select.innerHTML = "";
+            editSelect.innerHTML = "";
             authors.forEach(a => {
-                select.innerHTML += `<option value="${a.id}">${a.firstName || a.first_name} ${a.lastName || a.last_name}</option>`;
+                const option = `<option value="${a.id}">${a.firstName || a.first_name} ${a.lastName || a.last_name}</option>`;
+                select.innerHTML += option;
+                editSelect.innerHTML += option;
             });
         });
 }
@@ -81,7 +113,13 @@ function loadBooks() {
             tbody.innerHTML = "";
             books.forEach(b => {
                 const author = b.author ? `${b.author.firstName || b.author.first_name} ${b.author.lastName || b.author.last_name}` : "N/A";
-                const row = `<tr><td>${b.id}</td><td>${b.title}</td><td>${author}</td><td><button onclick="deleteBook(${b.id})">Delete</button></td></tr>`;
+                const row = `<tr>
+                    <td>${b.id}</td>
+                    <td>${b.title}</td>
+                    <td>${author}</td>
+                    <td><button onclick="showEditBookForm(${b.id}, '${b.title.replace(/'/g, "\\'")}', ${b.author ? b.author.id : ''})">Edit</button></td>
+                    <td><button onclick="deleteBook(${b.id})">Delete</button></td>
+                </tr>`;
                 tbody.innerHTML += row;
             });
         });
@@ -92,7 +130,7 @@ function deleteAuthor(id) {
         fetch(apiBase + "/authors/" + id, { method: "DELETE" })
             .then(() => {
                 loadAuthors();
-                loadBooks(); // Refresh books in case any were linked to this author
+                loadBooks();
             });
     }
 }
@@ -141,6 +179,72 @@ document.getElementById("bookForm").onsubmit = function(e) {
         loadBooks();
     });
 };
+
+// ----------- Edit Author Functions -----------
+function showEditAuthorForm(id, firstName, lastName) {
+    document.getElementById("editAuthorId").value = id;
+    document.getElementById("editAuthorFirstName").value = firstName;
+    document.getElementById("editAuthorLastName").value = lastName;
+    document.getElementById("editAuthorForm").style.display = "block";
+}
+function hideEditAuthorForm() {
+    document.getElementById("editAuthorForm").style.display = "none";
+    document.getElementById("editAuthorMsg").textContent = "";
+}
+function submitEditAuthor() {
+    const id = document.getElementById("editAuthorId").value;
+    const data = {
+        firstName: document.getElementById("editAuthorFirstName").value,
+        lastName: document.getElementById("editAuthorLastName").value
+    };
+    fetch(apiBase + "/authors/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => {
+        if (res.ok) {
+            document.getElementById("editAuthorMsg").textContent = "Author updated!";
+            loadAuthors();
+            setTimeout(hideEditAuthorForm, 1000);
+        } else {
+            document.getElementById("editAuthorMsg").textContent = "Update failed.";
+        }
+    });
+}
+
+// ----------- Edit Book Functions -----------
+function showEditBookForm(id, title, authorId) {
+    document.getElementById("editBookId").value = id;
+    document.getElementById("editBookTitle").value = title;
+    document.getElementById("editBookAuthor").value = authorId;
+    document.getElementById("editBookForm").style.display = "block";
+}
+function hideEditBookForm() {
+    document.getElementById("editBookForm").style.display = "none";
+    document.getElementById("editBookMsg").textContent = "";
+}
+function submitEditBook() {
+    const id = document.getElementById("editBookId").value;
+    const data = {
+        title: document.getElementById("editBookTitle").value,
+        author: { id: document.getElementById("editBookAuthor").value }
+    };
+    fetch(apiBase + "/books/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => {
+        if (res.ok) {
+            document.getElementById("editBookMsg").textContent = "Book updated!";
+            loadBooks();
+            setTimeout(hideEditBookForm, 1000);
+        } else {
+            document.getElementById("editBookMsg").textContent = "Update failed.";
+        }
+    });
+}
 </script>
 </body>
 </html>

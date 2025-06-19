@@ -13,6 +13,7 @@ class BookTest {
         // This test checks if the Spring application context loads successfully
     }
 
+    // Test for Book creation with default constructor
     @Test
     void testBookCreation() {
         Author author = new Author();
@@ -26,6 +27,7 @@ class BookTest {
         assert book.getAuthor().getLastName().equals("Doe");
     }
 
+    // Test for Book creation with parameters
     @Test
     void testBookConstructorWithParams() {
         Author author = new Author(5L, "Mark", "Twain");
@@ -35,6 +37,7 @@ class BookTest {
         assert book.getAuthor().equals(author);
     }
 
+    // Test for Book and Author relationship (ID mapping)
     @Test
     void testBookandAuthorRelationship() {
         Author author = new Author();
@@ -46,6 +49,7 @@ class BookTest {
         assert book.getAuthor().getId() == author.getId();
     }
 
+    // Test for Book ID change
     @Test
     void testBookIDChange() {
         Author author = new Author();
@@ -63,6 +67,7 @@ class BookTest {
         assert book.getId().equals(2L);
     }
 
+    // Test for Book title change
     @Test
     void testBookTitleChange() {
         Author author = new Author();
@@ -78,6 +83,7 @@ class BookTest {
         assert book.getTitle().equals("Updated Title");
     }
 
+    // Test for Book author change
     @Test
     void testBookAuthorChange() {
         Author author1 = new Author();
@@ -97,6 +103,7 @@ class BookTest {
         assert book.getAuthor().getId().equals(2L);
     }
 
+    // Test for Book without an author
     @Test
     void testBookWithoutAuthor() {
         Book book = new Book();

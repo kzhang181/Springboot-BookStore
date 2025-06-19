@@ -37,4 +37,15 @@ public class BookController {
         // Deletes a book by its ID
         bookRepository.deleteById(id);
     }
+    
+    @PutMapping("/books/{id}")
+    public Book updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+        return bookRepository.findById(id)
+            .map(book -> {
+                book.setTitle(updatedBook.getTitle());
+                book.setAuthor(updatedBook.getAuthor());
+                return bookRepository.save(book);
+            })
+            .orElseThrow(() -> new RuntimeException("Book not found"));
+    }
 }
