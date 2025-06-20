@@ -19,26 +19,28 @@ public class AuthorController {
         this.authorRepository = authorRepository;
     }
 
-    // Endpoints for managing authors
+    // Reads the list of authors (Read)
     @GetMapping("/authors")
     public List<Author> getAllAuthors() {
         // This method should return a list of all authors
         return authorRepository.findAll();
     }
 
-    // Endpoint to get an author by their ID
+    // Creating Authors (Create)
     @PostMapping("/authors")
     public Author createAuthor(@RequestBody Author author) {
         // This method should create a new author
-        return authorRepository.save(author); // In a real application, you would save the author to the database
+        return authorRepository.save(author);
     }
 
+    // Managing authors (Delete, Update)
     @DeleteMapping("/authors/{id}")
     public void deleteAuthor(@PathVariable Long id) {
         // This method should delete an author by their ID
-        authorRepository.deleteById(id); // In a real application, you would delete the author from the database
+        authorRepository.deleteById(id);
     }
 
+    // Update an author by their ID (Update)
     @PutMapping("/authors/{id}")
     public Author updateAuthor(@PathVariable Long id, @RequestBody Author updatedAuthor) {
         return authorRepository.findById(id)

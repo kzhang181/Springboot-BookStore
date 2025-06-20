@@ -18,26 +18,28 @@ public class BookController {
         this.bookRepository = bookRepository;
     }
 
-    // Endpoints for managing books
+    // Gets list of books (Read)
     @GetMapping("/books")
     public List<Book> getAllBooks() {
         // Returns a list of all books
         return bookRepository.findAll();
     }
 
-    // Endpoint to get a book by its ID
+    // Saves a new book (Create)
     @PostMapping("/books")
     public Book createBook(@RequestBody Book book) {
         // Creates a new book
         return bookRepository.save(book);
     }
 
+    // Deletes a book by its ID (Delete)
     @DeleteMapping("/books/{id}")
     public void deleteBook(@PathVariable Long id) {
         // Deletes a book by its ID
         bookRepository.deleteById(id);
     }
-    
+
+    // Updates a book by its ID (Update)
     @PutMapping("/books/{id}")
     public Book updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
         return bookRepository.findById(id)

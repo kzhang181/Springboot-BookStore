@@ -76,6 +76,7 @@ window.onload = function() {
     loadBooks();
 };
 
+// ----------- Load Authors and Books on Page Load -----------
 function loadAuthors() {
     fetch(apiBase + "/authors")
         .then(res => res.json())
@@ -125,6 +126,7 @@ function loadBooks() {
         });
 }
 
+// ----------- Delete Author -----------
 function deleteAuthor(id) {
     if (confirm("Are you sure you want to delete this author?")) {
         fetch(apiBase + "/authors/" + id, { method: "DELETE" })
@@ -135,6 +137,7 @@ function deleteAuthor(id) {
     }
 }
 
+// ----------- Delete Book -----------
 function deleteBook(id) {
     if (confirm("Are you sure you want to delete this book?")) {
         fetch(apiBase + "/books/" + id, { method: "DELETE" })
@@ -142,7 +145,7 @@ function deleteBook(id) {
     }
 }
 
-// Add Author
+// ----------- Add Author Functions -----------
 document.getElementById("authorForm").onsubmit = function(e) {
     e.preventDefault();
     const data = {
@@ -161,7 +164,7 @@ document.getElementById("authorForm").onsubmit = function(e) {
     });
 };
 
-// Add Book
+// ----------- Add Books Functions -----------
 document.getElementById("bookForm").onsubmit = function(e) {
     e.preventDefault();
     const data = {
